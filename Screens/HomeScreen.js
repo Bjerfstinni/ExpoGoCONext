@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, Modal } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 
-function HomeScreen({ navigation }) {
+function HomeScreen({ navigation, route }) {
   const [isCollapsed1, setIsCollapsed1] = useState(true);
   const [isCollapsed2, setIsCollapsed2] = useState(true);
   const [isCollapsed3, setIsCollapsed3] = useState(true);
   const [news, setNews] = useState([]);
   const [error, setError] = useState(null);
+  const [showMore, setShowMore] = useState(false);
+  const [selectedNews, setSelectedNews] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Ref for ScrollView
   const scrollViewRef = useRef(null);
-  
+
   // Fetch news data
   useEffect(() => {
     fetch("http://192.168.1.38:5000/fetchnews", {
@@ -35,22 +38,54 @@ function HomeScreen({ navigation }) {
       });
   }, []);
 
+  // Function to handle opening the modal
+  const openModal = (newsItem) => {
+    setSelectedNews(newsItem);
+    setModalVisible(true);
+  };
+
+  // Function to handle closing the modal
+  const closeModal = () => {
+    setSelectedNews(null);
+    setModalVisible(false);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container} ref={scrollViewRef}>
       <View style={styles.getConnected}>
-        <Text style={styles.heading}>Welcome to CITC-COnext News</Text>
+        <Text style={styles.heading}>
+          Welcome to CITC-COnext News {route.params && route.params.firstName}
+        </Text>
         <Text style={styles.paragraph}>
           Stay updated with the latest trends and insights in the world of technology and innovation. Our blog brings you the freshest news, intriguing articles, and expert opinions to keep you informed and inspired. Dive into our latest stories and explore the future of tech with us.
         </Text>
-        <View style={styles.centeredButtonContainer}>
-        </View>
+        <View style={styles.centeredButtonContainer} />
         <Image source={require('../assets/img1.png')} style={styles.image} />
       </View>
 
       <View style={styles.cards}>
         <View style={styles.cardContainer}>
           {error && <Text style={styles.error}>{error}</Text>}
-          {news.map((item) => (
+          {news.slice(0, 3).map((item) => ( // Render only the first 3 news items
+            <TouchableOpacity key={item._id} onPress={() => openModal(item)}>
+              <View style={[styles.card, styles.darkBackground]}>
+                <View style={styles.cardBody}>
+                  <Image
+                    source={{ uri: item.imageUrl }}
+                    style={styles.cardIcon}
+                  />
+                  <Text style={styles.cardTitle}>{item.title}</Text>
+                  <Text style={styles.cardText} numberOfLines={3}>{item.description}</Text> 
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+          {!showMore && news.length > 3 && ( // Render "Show more" button conditionally
+            <TouchableOpacity onPress={() => setShowMore(true)} style={styles.imgbtnbg}>
+              <Text style={styles.adminButtonText2}>Show more</Text>
+            </TouchableOpacity>
+          )}
+          {showMore && news.slice(3).map((item) => ( // Render rest of the news items if "Show more" is pressed
             <View key={item._id} style={[styles.card, styles.darkBackground]}>
               <View style={styles.cardBody}>
                 <Image
@@ -58,12 +93,46 @@ function HomeScreen({ navigation }) {
                   style={styles.cardIcon}
                 />
                 <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardText}>{item.description}</Text>
+                <Text style={styles.cardText} numberOfLines={3}>{item.description}</Text> 
               </View>
             </View>
           ))}
+          {showMore && ( // Render "Show less" button if "Show more" is pressed
+            <TouchableOpacity onPress={() => setShowMore(false)} style={styles.imgbtnbg}>
+              <Text style={styles.adminButtonText2}>Show less</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
+
+      <Modal
+  animationType="slide"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={closeModal}
+>
+  <View style={styles.modalContainer}>
+    <ScrollView contentContainerStyle={styles.modalScrollView}>
+      <View style={styles.modalContent}>
+        {selectedNews && (
+          <>
+            <Image
+              source={{ uri: selectedNews.imageUrl }}
+              style={styles.modalImage}
+            />
+            <Text style={styles.modalTitle}>{selectedNews.title}</Text>
+            <Text style={styles.modalDescription}>{selectedNews.description}</Text>
+            {/* Add other fields for complete news details */}
+            <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
+              <Text style={styles.modalCloseButtonText}>Close</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+    </ScrollView>
+  </View>
+</Modal>
+
 
       <View style={styles.imagebg}>
         <Image source={require('../assets/idea.jpg')} style={styles.image} />
@@ -79,7 +148,7 @@ function HomeScreen({ navigation }) {
       <View style={styles.imagebg}>
         <Image source={require('../assets/success.jpg')} style={styles.image} />
         <Text style={styles.paragraph}>
-          At CITC-COnext, we understand the importance of staying informed and connected. That's why we have developed a comprehensive suite of resources designed to keep you up-to-date on everything happening within the CITC department, EXCLUSIVELY FOR YOU!
+          At CITC-COnext, we understand the importance of staying informed that's why we have developed a comprehensive suite of resources designed to keep you up-to-date on everything happening within the CITC department, EXCLUSIVELY FOR YOU!
         </Text>
         <TouchableOpacity
           style={styles.imgbtnbg}
@@ -153,10 +222,7 @@ function HomeScreen({ navigation }) {
           <Text style={styles.footerLink}>Cookie Policy</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => { /* Navigate to Contact screen */ }}>
-          <Text style={styles.footerLink}>Contact</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.footerLink}></Text>
+          <Text style={styles.footerLink}>Contact me at 09057886899</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -181,7 +247,7 @@ const styles = StyleSheet.create({
   },
   navbarText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
   },
 
@@ -241,7 +307,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  
+
   // Input Styles
   input: {
     flex: 1,
@@ -339,145 +405,203 @@ const styles = StyleSheet.create({
   },
 
   // Background Styles
-  darkBackground: {
-    backgroundColor: '#000',
-  },
-  whiteBackground: {
-    backgroundColor: '#ffffff'
-  },
-  secondaryBackground: {
-    backgroundColor: '#6c757d',
-  },
+  darkBackground: { backgroundColor: '#000',
+},
+whiteBackground: {
+  backgroundColor: '#ffffff'
+},
+secondaryBackground: {
+  backgroundColor: '#6c757d',
+},
 
-  // Footer Styles
-  footer: {
-    backgroundColor: '#044556',
-    paddingVertical: 20,
-    alignItems: 'flex-start',
-    paddingHorizontal: 20,
-  },
-  footerText: {
-    color: '#fff',
-  },
-  footerText1: {
-    color: '#fff',
-    fontSize: 20,
-    paddingBottom: 15,
-  },
-  footerLink: {
-    color: '#fff',
-    textDecorationLine: 'underline',
-    marginBottom: 5,
-  },
+// Footer Styles
+footer: {
+  backgroundColor: '#044556',
+  paddingVertical: 20,
+  alignItems: 'flex-start',
+  paddingHorizontal: 20,
+},
+footerText: {
+  color: '#fff',
+},
+footerText1: {
+  color: '#fff',
+  fontSize: 20,
+  paddingBottom: 15,
+},
+footerLink: {
+  color: '#fff',
+  textDecorationLine: 'underline',
+  marginBottom: 5,
+},
 
-  // Image Section Styles
-  imageSection: {
-    paddingHorizontal: 10,
-    marginBottom: 20,
+// Image Section Styles
+imageSection: {
+  paddingHorizontal: 10,
+  marginBottom: 20,
+},
+imageContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: 20,
+},
+imageTextContainer: {
+  flex: 1,
+  paddingRight: 10,
+},
+imageHeading: {
+  fontSize: 24,
+  fontWeight: 'bold',
+  marginBottom: 10,
+  color: '#007bff', // Text primary color
+},
+imageParagraph: {
+  color: '#212529', // Text body color
+  marginBottom: 10,
+},
+imageButton: {
+  backgroundColor: '#ffffff', // White button
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  borderRadius: 5,
+  alignSelf: 'flex-start',
+},
+imageButtonText: {
+  color: '#007bff', // Button text color
+  fontWeight: 'bold',
+},
+imagebg: {
+  backgroundColor: 'white',
+  padding: 20,
+},
+
+// Button Background Styles
+buttonbg: {
+  color: '#fff',
+  fontWeight: 'bold',
+},
+imgbtnbg: {
+  backgroundColor: '#044556',
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  borderRadius: 5,
+  alignSelf: 'flex-start',
+},
+
+// Accordion Styles
+accordion: {
+  marginTop: 20,
+},
+accordionButton: {
+  backgroundColor: '#fff',
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  borderRadius: 5,
+  marginBottom: 10,
+},
+accordionButtonText: {
+  color: '#044556',
+  fontWeight: 'bold',
+  borderWidth: 1,
+  borderColor: '#044556',
+  paddingVertical: 10,
+  paddingHorizontal: 30,
+  borderRadius: 1000,
+},
+accordionContent: {
+  backgroundColor: '#f0f0f0',
+  padding: 10,
+  marginBottom: 10,
+},
+
+// Centered Button Container Styles
+centeredButtonContainer: {
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+// Admin Button Styles
+adminButton: {
+  backgroundColor: '#fff',
+  paddingVertical: 15,
+  paddingHorizontal: 80,
+  borderRadius: 10,
+  alignSelf: 'center',
+  borderWidth: 1,
+  borderColor: '#044556',
+},
+adminButtonText: {
+  color: '#044556',
+  fontWeight: 'bold',
+},
+adminButtonText1: {
+  color: '#fff',
+  fontWeight: 'bold',
+},
+adminButtonText2: {
+  color: '#fff',
+  fontWeight: 'bold',
+  alignItems:'center',
   },
-  imageContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  imageTextContainer: {
+error: {
+  color: 'red',
+  textAlign: 'center',
+  marginVertical: 10,
+},
+
+  // Modal Styles
+  modalContainer: {
     flex: 1,
-    paddingRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  imageHeading: {
+  modalContent: {
+    backgroundColor: '#044556',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    width: 300, // Fixed width value
+    maxHeight: '80%', // Set maximum height to ensure modal content is scrollable
+  },  
+  modalImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#007bff', // Text primary color
-  },
-  imageParagraph: {
-    color: '#212529', // Text body color
-    marginBottom: 10,
-  },
-  imageButton: {
-    backgroundColor: '#ffffff', // White button
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignSelf: 'flex-start',
-  },
-  imageButtonText: {
-    color: '#007bff', // Button text color
-    fontWeight: 'bold',
-  },
-  imagebg: {
-    backgroundColor: 'white',
-    padding: 20,
-  },
-
-  // Button Background Styles
-  buttonbg: {
     color: '#fff',
-    fontWeight: 'bold',
+    marginTop: 10,
+    textAlign: 'center',
   },
-  imgbtnbg: {
-    backgroundColor: '#044556',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignSelf: 'flex-start',
+  modalDescription: {
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 10,
   },
-
-  // Accordion Styles
-  accordion: {
-    marginTop: 20,
-  },
-  accordionButton: {
+  modalCloseButton: {
     backgroundColor: '#fff',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginBottom: 10,
+    alignSelf: 'center',
+    marginTop: 20,
   },
-  accordionButtonText: {
+  modalCloseButtonText: {
     color: '#044556',
     fontWeight: 'bold',
-    borderWidth: 1, 
-    borderColor: '#044556',
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 1000,
   },
-  accordionContent: {
-    backgroundColor: '#f0f0f0',
-    padding: 10,
-    marginBottom: 10,
-  },
-
-  // Centered Button Container Styles
-  centeredButtonContainer: {
+  modalScrollView: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
 
-  // Admin Button Styles
-  adminButton: {
-    backgroundColor: '#fff',
-    paddingVertical: 15,
-    paddingHorizontal: 80,
-    borderRadius: 10,
-    alignSelf: 'center',
-    borderWidth: 1,
-    borderColor: '#044556', 
-  },
-  adminButtonText: {
-    color: '#044556',
-    fontWeight: 'bold',
-  },
-  adminButtonText1: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  error: {
-    color: 'red',
-    textAlign: 'center',
-    marginVertical: 10,
-  },
 });
 
 export default HomeScreen;

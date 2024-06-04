@@ -1,16 +1,16 @@
 // MainNavigator.js
 import React, { useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useAuth } from './Navigation/AuthContext.js';
+import { useAuth } from './Navigation/AuthContext';
 import { Image, TouchableOpacity } from 'react-native';
-import HomeScreen from './Screens/HomeScreen.js';
-import ProfileScreen from './Screens/ProfileScreen.js';
-import UserScreen from './Screens/UserScreen.js';
-import Administrators from './Screens/Administrators.js';
-import Login from './Components/Login.js';
-import SignUp from './Components/SignUp.js';
-import HomePage from './Components/Homepage.js';
-import ModalComponent from './Components/ModalComponents.js';
+import HomeScreen from './Screens/HomeScreen';
+import ProfileScreen from './Screens/ProfileScreen';
+import UserScreen from './Screens/UserScreen';
+import Administrators from './Screens/Administrators';
+import Login from './Components/Login';
+import SignUp from './Components/SignUp';
+import HomePage from './Components/Homepage';
+import ModalComponent from './Components/ModalComponents';
 import { useNavigation } from '@react-navigation/native';
 
 import MenuIcon from './assets/menu.png';

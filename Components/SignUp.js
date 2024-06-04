@@ -10,26 +10,25 @@ const SignUp = ({ navigation }) => {
   const [role, setRole] = useState('User');
 
   const handleSignUp = async () => {
-    try {
-      const response = await fetch('http://192.168.1.38:5000/SignUp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ fname, lname, email, password, role }),
-      });
-      const data = await response.json();
-      if (data.status === 'okay') {
-        Alert.alert('Registration Successful', 'You have successfully registered!');
-        navigation.navigate('Login');
-      } else {
-        Alert.alert('Registration Failed', data.error || 'An error occurred');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'An error occurred during registration');
+  try {
+    const response = await fetch('http://192.168.1.38:5000/SignUp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ fname, lname, email, password, role }),
+    });
+    const data = await response.json();
+    if (data.status === 'okay') {
+      Alert.alert('Registration Successful', 'You have successfully registered!');
+      navigation.navigate('Home', { firstName: fname });
+    } else {
+      Alert.alert('Registration Failed', data.error || 'An error occurred');
     }
-  };
-
+  } catch (error) {
+    Alert.alert('Error', 'An error occurred during registration');
+  }
+};
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Sign Up</Text>
