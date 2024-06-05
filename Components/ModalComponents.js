@@ -5,8 +5,8 @@ const { height, width } = Dimensions.get('window');
 
 const ModalComponent = ({ visible, onClose, onLogout, navigation }) => {
   const handleLogout = () => {
-    onClose(); // Close the modal when the Logout button is pressed
-    onLogout(); // Perform logout action
+    onClose();
+    onLogout();
   };
 
   return (
@@ -23,14 +23,14 @@ const ModalComponent = ({ visible, onClose, onLogout, navigation }) => {
             style={styles.drawerItem}
             onPress={() => {
               navigation.navigate("Administrators");
-              onClose(); 
+              onClose();
             }}
           >
             <Text style={styles.drawerItemText}>Administrators</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.drawerItem}
-            onPress={handleLogout} // Call the handleLogout function
+            onPress={handleLogout}
           >
             <Text style={styles.drawerItemText}>Logout</Text>
           </TouchableOpacity>

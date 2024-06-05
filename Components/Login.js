@@ -1,4 +1,3 @@
-// Login.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useAuth } from '../Navigation/AuthContext';
@@ -10,7 +9,7 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.1.38:5000/Login", {
+      const response = await fetch("http://192.168.118.62:5000/Login", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,8 +19,8 @@ const Login = ({ navigation }) => {
       const data = await response.json();
       if (data.status === 'okay') {
         Alert.alert('Login Successful', 'You have successfully logged in!');
-        setIsLoggedIn(true); // Set the user as logged in
-        navigation.replace('HomeScreen'); // Navigate to HomeScreen
+        setIsLoggedIn(true);
+        navigation.replace('HomeScreen');
       } else {
         Alert.alert('Login Failed', data.error || 'An error occurred');
       }
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   linkText: {
-    color: '#007bff', // Link color
+    color: '#007bff',
     textAlign: 'center',
   },
 });

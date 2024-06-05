@@ -4,15 +4,14 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'rea
 import pabsIcon from '../assets/Admins/pabs.png';
 import danzIcon from '../assets/Admins/dan.png';
 import risuIcon from '../assets/Admins/iris.png';
-import nozoIcon from '../assets/Admins/nozo.png';
 
 function Administrators() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.cardContainer}>
-        <Text style={styles.cardTitle}>Meet Our Administrators</Text> 
+        <Text style={styles.cardTitle}>Meet Our Administrators</Text>
         <Text style={styles.cardText}>Our administrators are experts in the field of IT, each with over 5 years of experience.</Text>
-        
+
         {/* First Card */}
         <View style={[styles.card, styles.cardBackground1]}>
           <View style={styles.cardBody}>
@@ -50,7 +49,7 @@ function Administrators() {
               <Text style={styles.cardButtonText}>Connect</Text>
             </TouchableOpacity>
           </View>
-        </View>       
+        </View>
       </View>
     </ScrollView>
   );
@@ -66,7 +65,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     width: '90%',
     marginBottom: 20,
-    backgroundColor: '#f5f5f5', 
+    backgroundColor: '#f5f5f5',
   },
   card: {
     marginTop: 20,
