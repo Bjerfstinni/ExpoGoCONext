@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Dimensions, Alert, Image } from 'react-native';
 
 const { height, width } = Dimensions.get('window');
 
@@ -7,6 +7,18 @@ const ModalComponent = ({ visible, onClose, onLogout, navigation }) => {
   const handleLogout = () => {
     onClose();
     onLogout();
+  };
+
+  const handleNewsPress = () => {
+    Alert.alert('Restricted', 'Access to News is restricted.');
+  };
+
+  const handleProfilePress = () => {
+    Alert.alert(
+      'User Profile',
+      '<Profile Picture>\n\n\n\nEmail: danz.famas678@gamil.com \nFirst Name: Danz Bjerfstin \nLast Name: Famas',
+      [{ text: 'Back' }]
+    );
   };
 
   return (
@@ -26,7 +38,19 @@ const ModalComponent = ({ visible, onClose, onLogout, navigation }) => {
               onClose();
             }}
           >
-            <Text style={styles.drawerItemText}>Administrators</Text>
+            <Text style={styles.drawerItemText}>About Us</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.drawerItem}
+            onPress={handleNewsPress}
+          >
+            <Text style={styles.drawerItemText}>News</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.drawerItem}
+            onPress={handleProfilePress}
+          >
+            <Text style={styles.drawerItemText}>Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.drawerItem}

@@ -35,22 +35,22 @@ const MainNavigator = () => {
       <Stack.Navigator>
         {isLoggedIn ? (
           <>
-            <Stack.Screen 
-              name="HomeScreen" 
-              component={HomeScreen} 
+            <Stack.Screen
+              name="HomeScreen"
+              component={HomeScreen}
               options={{
                 title: "CITC CoNexT",
                 headerStyle: { backgroundColor: '#044556' },
                 headerTintColor: '#fff',
                 headerRight: () => (
                   <TouchableOpacity onPress={toggleModal}>
-                    <Image 
+                    <Image
                       source={MenuIcon}
                       style={{ width: 25, height: 25, marginRight: 15 }}
                     />
                   </TouchableOpacity>
                 ),
-              }}  
+              }}
             />
             <Stack.Screen name="Administrators" component={Administrators} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
@@ -58,16 +58,16 @@ const MainNavigator = () => {
           </>
         ) : (
           <>
-            <Stack.Screen 
-              name="HomePage" 
-              component={HomePage} 
+            <Stack.Screen
+              name="HomePage"
+              component={HomePage}
               options={{
                 title: "CITC CoNexT",
                 headerStyle: { backgroundColor: '#044556' },
                 headerTintColor: '#fff',
-              }}  
+              }}
             />
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: true }} /> 
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: true }} />
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="Administrators" component={Administrators} />
           </>

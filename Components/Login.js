@@ -9,7 +9,7 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.118.62:5000/Login", {
+      const response = await fetch("http://192.168.217.62:5000/Login", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

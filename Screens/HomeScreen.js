@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, Modal } from 'react-native';
-import Collapsible from 'react-native-collapsible';
 
 function HomeScreen({ navigation, route }) {
-  const [isCollapsed1, setIsCollapsed1] = useState(true);
-  const [isCollapsed2, setIsCollapsed2] = useState(true);
-  const [isCollapsed3, setIsCollapsed3] = useState(true);
   const [news, setNews] = useState([]);
   const [error, setError] = useState(null);
   const [showMore, setShowMore] = useState(false);
@@ -17,7 +13,7 @@ function HomeScreen({ navigation, route }) {
 
   // Fetch news data
   useEffect(() => {
-    fetch("http://192.168.118.62:5000/fetchnews", {
+    fetch("http://192.168.217.62:5000/fetchnews", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -52,11 +48,10 @@ function HomeScreen({ navigation, route }) {
     <ScrollView contentContainerStyle={styles.container} ref={scrollViewRef}>
       <View style={styles.getConnected}>
         <Text style={styles.heading}>
-          Welcome to CITC-COnext News {route.params && route.params.firstName}
+          Welcome Danz {route.params && route.params.firstName}
         </Text>
         <Text style={styles.paragraph}>
-          Stay updated with the latest trends and insights in the world of technology and innovation. Our blog brings you the freshest news, intriguing articles, and expert opinions to keep you informed and inspired. Dive into our latest stories and explore the future of tech with us.
-        </Text>
+          A centralized application; An educational blog site for students under the Department of College of Information Technology and Communication in USTP-CDO        </Text>
         <View style={styles.centeredButtonContainer} />
         <Image source={require('../assets/img1.png')} style={styles.image} />
       </View>
