@@ -48,7 +48,7 @@ function HomeScreen({ navigation, route }) {
     <ScrollView contentContainerStyle={styles.container} ref={scrollViewRef}>
       <View style={styles.getConnected}>
         <Text style={styles.heading}>
-          Welcome Danz {route.params && route.params.firstName}
+          Welcome Arlene Baldelovar {route.params && route.params.firstName}
         </Text>
         <Text style={styles.paragraph}>
           A centralized application; An educational blog site for students under the Department of College of Information Technology and Communication in USTP-CDO        </Text>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+import CheckBox from 'expo-checkbox'; // Corrected import statement
 
 const SignUp = ({ navigation }) => {
   const [fname, setFname] = useState('');
@@ -21,7 +21,7 @@ const SignUp = ({ navigation }) => {
       const data = await response.json();
       if (data.status === 'okay') {
         Alert.alert('Registration Successful', 'You have successfully registered!');
-        navigation.navigate('Home', { firstName: fname });
+        navigation.navigate('Login', { firstName: fname });
       } else {
         Alert.alert('Registration Failed', data.error || 'An error occurred');
       }
@@ -29,6 +29,7 @@ const SignUp = ({ navigation }) => {
       Alert.alert('Error', 'An error occurred during registration');
     }
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Sign Up</Text>
@@ -61,7 +62,7 @@ const SignUp = ({ navigation }) => {
       />
       <View style={styles.roleContainer}>
         <View style={styles.roleOption}>
-          <CheckBox value={true} disabled={true} />
+          <CheckBox value={role === 'Admin'} disabled={true} />
           <Text style={styles.roleText}>Admin</Text>
         </View>
         <View style={styles.roleOption}>
@@ -69,6 +70,7 @@ const SignUp = ({ navigation }) => {
           <Text style={styles.roleText}>User</Text>
         </View>
       </View>
+
       <TouchableOpacity style={styles.button} onPress={handleSignUp}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
